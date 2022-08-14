@@ -7,11 +7,11 @@
 typedef struct
 {
 	// general purpose registers
-	struct
+	union
 	{
-		struct
+		union
 		{
-			struct
+			union
 			{
 				uint32_t _32;
 				uint16_t _16;
@@ -19,6 +19,7 @@ typedef struct
 			};
 			uint32_t val;
 		} gpr[8];
+
 		struct
 		{ // do not change the order of the registers
 			uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
@@ -69,6 +70,7 @@ typedef struct
 #else
 	uint8_t dummy_seg[142]; // make __ref_ instructions safe to use
 #endif
+
 #ifdef IA32_PAGE
 	// control registers, todo: define type CR3
 	CR3 cr3;
