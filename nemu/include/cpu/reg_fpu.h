@@ -45,12 +45,12 @@ typedef union {
 typedef union {
 	struct
 	{
-		uint32_t fraction : 23;
-		uint32_t exponent : 8;
-		uint32_t sign : 1;
+		uint32_t fraction : 23;//尾数
+		uint32_t exponent : 8;//阶码
+		uint32_t sign : 1;//符号位
 	};
-	float fval;
-	uint32_t val;
+	float fval;//浮点数
+	uint32_t val;//机器数
 } FLOAT;
 
 typedef struct

@@ -6,7 +6,12 @@ FPU fpu;
 FLOAT p_zero, n_zero, p_inf, n_inf, p_nan, n_nan;
 
 // the last three bits of the significand are reserved for the GRS bits
-inline uint32_t internal_normalize(uint32_t sign, int32_t exp, uint64_t sig_grs)
+inline 
+uint32_t internal_normalize(uint32_t sign,//结果的符号 
+							//中间结果阶数(含偏置常数，可能为负)
+							int32_t exp, 
+							uint64_t sig_grs//中间结果尾数，26位小数, 高38位表示整数部分
+							)
 {
 
 	// normalization
@@ -108,6 +113,15 @@ CORNER_CASE_RULE corner_add[] = {
 };
 
 // a + b
+/*
+1.处理边界情况 (NaN, 0, INF)
+2.提取符号，阶码，尾数
+3.整数运算得到中间结果
+	3.1 对阶，小阶向大阶看齐
+	3.2 尾数相加
+4.舍入并规格化后返回
+  阶码上溢出 ，参照表格2.2，可能赋值成正无穷等
+*/
 uint32_t internal_float_add(uint32_t b, uint32_t a)
 {
 
@@ -140,6 +154,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 		return b;
 	}
 
+	//fa中保留阶小的数，fb中保留阶大的数
 	if (fa.exponent > fb.exponent)
 	{
 		fa.val = b;
@@ -156,14 +171,17 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 
 	// alignment shift for fa
 	uint32_t shift = 0;
-
+	//计算移位的位数
 	/* TODO: shift = ? */
 	printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
 	fflush(stdout);
 	assert(0);
 	assert(shift >= 0);
 
-	sig_a = (sig_a << 3); // guard, round, sticky
+	//右移时的保护位  G R S
+	//S位 有1的话 会一直保留着
+	//1位隐藏位 23位尾数(fraction)  3位保护位
+	sig_a = (sig_a << 3); // 预留低位用于 guard, round, sticky
 	sig_b = (sig_b << 3);
 
 	uint32_t sticky = 0;
@@ -178,14 +196,14 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	// significand add
 	if (fa.sign)
 	{
-		sig_a *= -1;
+		sig_a *= -1; //取补码
 	}
 	if (fb.sign)
 	{
 		sig_b *= -1;
 	}
 
-	sig_res = sig_a + sig_b;
+	sig_res = sig_a + sig_b;//中间结果尾数
 
 	if (sign(sig_res))
 	{
