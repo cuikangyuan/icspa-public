@@ -45,9 +45,9 @@ typedef union {
 typedef union {
 	struct
 	{
-		uint32_t fraction : 23;//尾数
-		uint32_t exponent : 8;//阶码
-		uint32_t sign : 1;//符号位
+		uint32_t fraction : 23;//尾数的机器数
+		uint32_t exponent : 8;//阶码的机器数
+		uint32_t sign : 1;//符号位的机器数
 	};
 	float fval;//浮点数
 	uint32_t val;//机器数

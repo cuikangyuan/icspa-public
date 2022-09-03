@@ -45,6 +45,7 @@ uint32_t internal_float_mul(uint32_t b, uint32_t a);
 // a / b
 uint32_t internal_float_div(uint32_t b, uint32_t a);
 
+//规格化舍入函数
 uint32_t internal_normalize(uint32_t sign, int32_t exp, uint64_t sig_grs);
 
 //void fpu_test();

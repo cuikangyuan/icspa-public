@@ -295,6 +295,7 @@ uint64_t alu_mul(uint32_t src, uint32_t dest, size_t data_size)
 	uint64_t dest64 = dest;
 	uint64_t res = src64 * dest64;
 	uint64_t high_orders = res & (0xFFFFFFFFFFFFFFFF << data_size);
+	//printf("src64=%#018llx, src=%#010x\n", src64, src);
 	if (high_orders != 0)
 	{
 		cpu.eflags.CF = 1;

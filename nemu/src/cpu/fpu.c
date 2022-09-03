@@ -26,14 +26,17 @@ uint32_t internal_normalize(uint32_t sign,//结果的符号
 			   )
 		{
 
-			/* TODO: shift right, pay attention to sticky bit*/
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			//右规操作
+			/* shift right, pay attention to sticky bit*/
+			uint32_t sticky = sticky | (sig_grs & 0x1);
+			sig_grs = sig_grs >> 1;
+			sig_grs |= sticky;
+			exp++;
 		}
 
 		if (exp >= 0xff)
 		{
+			//阶码上溢
 			/* TODO: assign the number to infinity */
 			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
 			fflush(stdout);
@@ -140,7 +143,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	{
 		return a;
 	}
-
+	
 	FLOAT f, fa, fb;
 	fa.val = a;
 	fb.val = b;
@@ -155,6 +158,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	}
 
 	//fa中保留阶小的数，fb中保留阶大的数
+	//小阶向大阶看齐
 	if (fa.exponent > fb.exponent)
 	{
 		fa.val = b;
@@ -162,6 +166,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	}
 
 	uint32_t sig_a, sig_b, sig_res;
+	//提取符号 阶码 尾数部分 规格化数的尾数真值需要在原来尾数基础上加上隐含1
 	sig_a = fa.fraction;
 	if (fa.exponent != 0)
 		sig_a |= 0x800000; // the implied 1
@@ -171,19 +176,30 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 
 	// alignment shift for fa
 	uint32_t shift = 0;
-	//计算移位的位数
-	/* TODO: shift = ? */
-	printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-	fflush(stdout);
-	assert(0);
+	//将移位的位数计算出来 将阶较小的数的尾数右移，计算shift注意非规格化数的情形
+	if (fa.exponent == 0)
+	{
+		if (fb.exponent == 0)
+		{
+			shift = fb.exponent - fa.exponent; 
+		} else {
+			shift = fb.exponent - 127 + 126;
+		}		
+	} else {
+		shift = fb.exponent - fa.exponent;
+	}
+	
 	assert(shift >= 0);
 
 	//右移时的保护位  G R S
 	//S位 有1的话 会一直保留着
 	//1位隐藏位 23位尾数(fraction)  3位保护位
-	sig_a = (sig_a << 3); // 预留低位用于 guard, round, sticky
+	//预留低位用于 guard, round, sticky
+	//尾数左移留出GRS bits
+	sig_a = (sig_a << 3); 
 	sig_b = (sig_b << 3);
 
+	//尾数右移对阶
 	uint32_t sticky = 0;
 	while (shift > 0)
 	{
@@ -193,6 +209,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 		shift--;
 	}
 
+	//无符号数*-1 再赋值给无符号数 等同于取补码
 	// significand add
 	if (fa.sign)
 	{
