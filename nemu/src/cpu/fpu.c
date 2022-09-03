@@ -5,13 +5,29 @@ FPU fpu;
 // special values
 FLOAT p_zero, n_zero, p_inf, n_inf, p_nan, n_nan;
 
+
+void traceFpuResult(FLOAT res, FLOAT std) {
+
+	printf("res => fval: %f, val: %x, sign: %x, exp: %x, fraction: %x\n", res.fval, res.val, res.sign, res.exponent, res.fraction);
+	printf("std => fval: %f, val: %x, sign: %x, exp: %x, fraction: %x\n", std.fval, std.val, std.sign, std.exponent, std.fraction);
+}
+
+inline FLOAT internal_normalize_wrapper(uint32_t sign,
+										int32_t exp,
+										uint64_t sig_grs)
+{
+	FLOAT f;
+	uint32_t res = internal_normalize(sign, exp, sig_grs);
+	f.val = res;
+	return f;
+}
+
 // the last three bits of the significand are reserved for the GRS bits
-inline 
-uint32_t internal_normalize(uint32_t sign,//结果的符号 
-							//中间结果阶数(含偏置常数，可能为负)
-							int32_t exp, 
-							uint64_t sig_grs//中间结果尾数，26位小数, 高38位表示整数部分
-							)
+inline uint32_t internal_normalize(uint32_t sign, //结果的符号
+												  //中间结果阶数(含偏置常数，可能为负)
+								   int32_t exp,
+								   uint64_t sig_grs //中间结果尾数，26位小数, 高38位表示整数部分
+)
 {
 
 	// normalization
@@ -22,13 +38,14 @@ uint32_t internal_normalize(uint32_t sign,//结果的符号
 		// normalize toward right
 		while ((((sig_grs >> (23 + 3)) > 1) && exp < 0xff) // condition 1
 			   ||										   // or
-			   (sig_grs > 0x04 && exp < 0)				   // condition 2
-			   )
+			   (sig_grs > 0x04 && exp < 0)				   // condition 2 ???
+		)
 		{
 
 			//右规操作
 			/* shift right, pay attention to sticky bit*/
-			uint32_t sticky = sticky | (sig_grs & 0x1);
+			uint32_t sticky = 0;
+			sticky = sticky | (sig_grs & 0x1);
 			sig_grs = sig_grs >> 1;
 			sig_grs |= sticky;
 			exp++;
@@ -37,27 +54,26 @@ uint32_t internal_normalize(uint32_t sign,//结果的符号
 		if (exp >= 0xff)
 		{
 			//阶码上溢
-			/* TODO: assign the number to infinity */
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			/*assign the number to infinity */
+			exp = 0xff;
+			sig_grs = 0;
 			overflow = true;
 		}
 		if (exp == 0)
 		{
 			// we have a denormal here, the exponent is 0, but means 2^-126,
 			// as a result, the significand should shift right once more
-			/* TODO: shift right, pay attention to sticky bit*/
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			/* shift right, pay attention to sticky bit*/
+			uint32_t sticky = 0;
+			sticky = sticky | (sig_grs & 0x1);
+			sig_grs = sig_grs >> 1;
+			sig_grs |= sticky;
 		}
 		if (exp < 0)
 		{
-			/* TODO: assign the number to zero */
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			/* assign the number to zero */
+			exp = 0;
+			sig_grs = 0;
 			overflow = true;
 		}
 	}
@@ -66,18 +82,18 @@ uint32_t internal_normalize(uint32_t sign,//结果的符号
 		// normalize toward left
 		while (((sig_grs >> (23 + 3)) == 0) && exp > 0)
 		{
-			/* TODO: shift left */
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			/*shift left */
+			sig_grs = sig_grs << 1;
+			exp--;
 		}
 		if (exp == 0)
 		{
 			// denormal
-			/* TODO: shift right, pay attention to sticky bit*/
-			printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-			fflush(stdout);
-			assert(0);
+			/* shift right, pay attention to sticky bit*/
+			uint32_t sticky = 0;
+			sticky = sticky | (sig_grs & 0x1);
+			sig_grs = sig_grs >> 1;
+			sig_grs |= sticky;
 		}
 	}
 	else if (exp == 0 && sig_grs >> (23 + 3) == 1)
@@ -88,16 +104,65 @@ uint32_t internal_normalize(uint32_t sign,//结果的符号
 
 	if (!overflow)
 	{
-		/* TODO: round up and remove the GRS bits */
-		printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-		fflush(stdout);
-		assert(0);
+		/* round up and remove the GRS bits */
+		// 1.舍入：就近舍入到偶数
+		/**
+		 * 就近舍入（round to nearest）这是标准列出的默认舍入方式，
+		 * 其含义相当于我们日常所说的“四舍五入”。
+		 * 例如，对于32位单精度浮点数来说，若超出可保存的23位的多余位大于等于100…01，
+		 * 则多余位的值超过了最低可表示位值的一半，这种情况下，舍入的方法是在尾数的最低有效位上加1；
+		 * 若多余位小于等于011…11，则直接舍去；若多余位为100…00，此时再判断尾数的最低有效位的值，若为0则直接舍去，若为1则再加1。
+		 *
+		 */
+		// 2.判读是否需要再次右规操作，并判断阶码上溢
+		// 3.对于规格化浮点数，丢弃最高位隐藏位
+
+		uint8_t grs = sig_grs & 0x7;
+		sig_grs >>= 3;
+
+		bool sig_grs_added = false;
+
+		if (grs == 0x4)
+		{
+			if (sig_grs & 0x1)
+			{
+				sig_grs += 0x1;
+				sig_grs_added = true;
+			}
+		}
+		else if (grs > 0x4)
+		{
+			sig_grs += 0x1;
+			sig_grs_added = true;
+		}
+
+		if (sig_grs_added)
+		{
+			if ((sig_grs >> 23) > 1)
+			{
+				sig_grs = sig_grs >> 1;
+				exp++;
+
+				if (exp >= 0xff)
+				{
+					exp = 0xff;
+					overflow = true;
+					sig_grs = 0;
+				}
+			}
+		}
+
+		if (exp != 0)
+		{
+			sig_grs &= 0x7fffff;
+		}
 	}
 
 	FLOAT f;
 	f.sign = sign;
 	f.exponent = (uint32_t)(exp & 0xff);
 	f.fraction = sig_grs; // here only the lowest 23 bits are kept
+
 	return f.val;
 }
 
@@ -143,7 +208,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	{
 		return a;
 	}
-	
+
 	FLOAT f, fa, fb;
 	fa.val = a;
 	fb.val = b;
@@ -157,7 +222,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 		return b;
 	}
 
-	//fa中保留阶小的数，fb中保留阶大的数
+	// fa中保留阶小的数，fb中保留阶大的数
 	//小阶向大阶看齐
 	if (fa.exponent > fb.exponent)
 	{
@@ -181,22 +246,30 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	{
 		if (fb.exponent == 0)
 		{
-			shift = fb.exponent - fa.exponent; 
-		} else {
+			shift = fb.exponent - fa.exponent;
+		}
+		else
+		{
 			shift = fb.exponent - 127 + 126;
-		}		
-	} else {
+		}
+	}
+	else
+	{
 		shift = fb.exponent - fa.exponent;
 	}
-	
+
+	// uint32_t shift1 = (fb.exponent == 0 ? fb.exponent + 1 : fb.exponent) - (fa.exponent == 0 ? fa.exponent + 1 : fa.exponent);
+	// printf("shift: %x, shift1: %x\n",
+	// 		  shift, shift1);
+
 	assert(shift >= 0);
 
 	//右移时的保护位  G R S
-	//S位 有1的话 会一直保留着
-	//1位隐藏位 23位尾数(fraction)  3位保护位
+	// S位 有1的话 会一直保留着
+	// 1位隐藏位 23位尾数(fraction)  3位保护位
 	//预留低位用于 guard, round, sticky
 	//尾数左移留出GRS bits
-	sig_a = (sig_a << 3); 
+	sig_a = (sig_a << 3);
 	sig_b = (sig_b << 3);
 
 	//尾数右移对阶
@@ -220,7 +293,7 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 		sig_b *= -1;
 	}
 
-	sig_res = sig_a + sig_b;//中间结果尾数
+	sig_res = sig_a + sig_b; //中间结果尾数
 
 	if (sign(sig_res))
 	{
@@ -233,8 +306,17 @@ uint32_t internal_float_add(uint32_t b, uint32_t a)
 	}
 
 	uint32_t exp_res = fb.exponent;
-	return internal_normalize(f.sign, exp_res, sig_res);
+	//uint32_t res = internal_normalize(f.sign, exp_res, sig_res);
+	FLOAT res = internal_normalize_wrapper(f.sign, exp_res, sig_res);
+
+	//FLOAT test_result;
+	//test_result.fval = fa.fval + fb.fval;
+
+	//traceFpuResult(res, test_result);
+
+	return res.val;
 }
+
 
 CORNER_CASE_RULE corner_sub[] = {
 	{P_ZERO_F, P_ZERO_F, P_ZERO_F},
@@ -321,10 +403,8 @@ uint32_t internal_float_mul(uint32_t b, uint32_t a)
 	sig_res = sig_a * sig_b; // 24b * 24b
 	uint32_t exp_res = 0;
 
-	/* TODO: exp_res = ? leave space for GRS bits. */
-	printf("\e[0;31mPlease implement me at fpu.c\e[0m\n");
-	fflush(stdout);
-	assert(0);
+	/*exp_res = ? leave space for GRS bits. */
+	exp_res = fa.exponent + fb.exponent - 127 - (46 - 26);
 	return internal_normalize(f.sign, exp_res, sig_res);
 }
 
@@ -529,20 +609,20 @@ void fpu_cmp(uint32_t idx)
 	if (*a > *b)
 	{
 		fpu.status.c0 = fpu.status.c2 = fpu.status.c3 = 0;
-		//printf("f %f > %f\n", *a, *b);
-		//printf("f %x > %x\n", *((uint32_t *)a), *((uint32_t *)b));
+		// printf("f %f > %f\n", *a, *b);
+		// printf("f %x > %x\n", *((uint32_t *)a), *((uint32_t *)b));
 	}
 	else if (*a < *b)
 	{
 		fpu.status.c0 = 1;
 		fpu.status.c2 = fpu.status.c3 = 0;
-		//printf("f %f < %f\n", *a, *b);
+		// printf("f %f < %f\n", *a, *b);
 	}
 	else
 	{
 		fpu.status.c0 = fpu.status.c2 = 0;
 		fpu.status.c3 = 1;
-		//printf("f %f == %f\n", *a, *b);
+		// printf("f %f == %f\n", *a, *b);
 	}
 }
 
