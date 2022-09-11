@@ -16,18 +16,18 @@ enum
 };
 
 #define MEM_ADDR_NA 0xffffffff
-
-//enum {MEM_ADDR_OFF, MEM_ADDR_SIB};
+// enum {MEM_ADDR_OFF, MEM_ADDR_SIB};
 
 typedef struct
 {
 	//	uint32_t type;
-	uint32_t disp;  // hex
-	uint32_t base;  // register
+	uint32_t disp;	// hex
+	uint32_t base;	// register
 	uint32_t index; // register
 	uint32_t scale; // 1, 2, 4, 8
 } MEM_ADDR;			// memory address details
 
+//操作数
 typedef struct
 {
 	int type;

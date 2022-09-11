@@ -4,11 +4,14 @@
 // the type of an instruction entry
 typedef int (*instr_func)(uint32_t eip, uint8_t opcode);
 
+//输出指令信息
+//注意 跳转指令时，以下函数要在改变eip之前调用
 void print_asm_0(char *instr, char *suffix, uint8_t len);
 void print_asm_1(char *instr, char *suffix, uint8_t len, OPERAND *opr_1);
 void print_asm_2(char *instr, char *suffix, uint8_t len, OPERAND *opr_1, OPERAND *opr_2);
 void print_asm_3(char *instr, char *suffix, uint8_t len, OPERAND *opr_1, OPERAND *opr_2, OPERAND *opr_3);
 
+//将实现指令的函数名扩展城符合框架代码规范的指令函数的声明格式
 // macro for making an instruction entry
 #define make_instr_func(name) int name(uint32_t eip, uint8_t opcode)
 

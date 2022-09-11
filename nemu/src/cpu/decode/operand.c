@@ -1,6 +1,7 @@
 #include "cpu/operand.h"
 #include <stdio.h>
 
+//所有指令实现函数共享
 // the source and destination operands
 OPERAND opr_src, opr_dest;
 

@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "cpu.h": "c",
-        "alu_ref.h": "c"
-    }
+        "alu_ref.h": "c",
+        "nemu.h": "c"
+    },
+    "editor.fontSize": 14,
+    "markdown.preview.fontSize": 19,
+    "scm.inputFontSize": 14
 }

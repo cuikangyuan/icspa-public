@@ -46,6 +46,7 @@ void init_cpu(const uint32_t init_eip)
 }
 
 
+//执行循环的模拟
 void exec(uint32_t n)
 {
 	static BP *bp = NULL;
@@ -63,7 +64,9 @@ void exec(uint32_t n)
 	{
 		if(!is_nemu_hlt)
 		{
+			//执行eip指向的指令 返回指令的长度
 			instr_len = exec_inst();
+			//eip指向下一条指令
 			cpu.eip += instr_len;
 			n--;
 
@@ -125,7 +128,7 @@ void exec(uint32_t n)
 int exec_inst()
 {
 	uint8_t opcode = 0;
-	// get the opcode
+	// get the opcode 读一个字节
 	opcode = instr_fetch(cpu.eip, 1);
 //printf("opcode = %x, eip = %x\n", opcode, cpu.eip);
 // instruction decode and execution

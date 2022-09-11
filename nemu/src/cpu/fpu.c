@@ -404,6 +404,7 @@ uint32_t internal_float_mul(uint32_t b, uint32_t a)
 	uint32_t exp_res = 0;
 
 	/*exp_res = ? leave space for GRS bits. */
+	//保持尾数中间结果编码不变，通过调整阶码exp，使得真值符合sig_grs约定
 	exp_res = fa.exponent + fb.exponent - 127 - (46 - 26);
 	return internal_normalize(f.sign, exp_res, sig_res);
 }

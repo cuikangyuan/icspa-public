@@ -13,6 +13,8 @@ typedef union {
 	uint8_t val;
 } MODRM;
 
+//当指令的opcode确定后->确定是否需求解析ModR/M字节->确定通过解析ModR/M字节应该获得什么操作数类型的信息
+
 // The following functions parses the ModR/M byte and the possible following SIB and displacement bytes.
 // Return the number of bytes read during parsing the ModR/M byte.
 // Note they are only responsible for getting the type and addr of the

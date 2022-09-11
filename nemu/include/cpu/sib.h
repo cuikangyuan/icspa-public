@@ -11,7 +11,7 @@ typedef union {
 		uint32_t index : 3;
 		uint32_t ss : 2;
 	};
-	uint8_t val;
+	uint8_t val;h
 } SIB;
 
 // given the sib byte, parse it and obtain the address
