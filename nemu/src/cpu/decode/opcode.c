@@ -22,19 +22,19 @@ instr_func opcode_entry[256] = {
     /* 0x48 - 0x4b*/ inv, inv, inv, inv,
     /* 0x4c - 0x4f*/ inv, inv, inv, inv,
     /* 0x50 - 0x53*/ inv, inv, inv, inv,
-    /* 0x54 - 0x57*/ inv, inv, inv, inv,
+    /* 0x54 - 0x57*/ inv, push_r_v, inv, inv,
     /* 0x58 - 0x5b*/ inv, inv, inv, inv,
     /* 0x5c - 0x5f*/ inv, inv, inv, inv,
     /* 0x60 - 0x63*/ inv, inv, inv, inv,
     /* 0x64 - 0x67*/ inv, inv, data_size_16, inv,
     /* 0x68 - 0x6b*/ inv, inv, inv, inv,
     /* 0x6c - 0x6f*/ inv, inv, inv, inv,
-    /* 0x70 - 0x73*/ inv, inv, inv, inv,
-    /* 0x74 - 0x77*/ inv, inv, inv, inv,
-    /* 0x78 - 0x7b*/ inv, inv, inv, inv,
-    /* 0x7c - 0x7f*/ inv, inv, inv, inv,
+    /* 0x70 - 0x73*/ jo_short_, jno_short_, jb_short_, jae_short_,
+    /* 0x74 - 0x77*/ je_short_, jne_short_, jna_short_, ja_short_,
+    /* 0x78 - 0x7b*/ js_short_, jns_short_, jp_short_, jnp_short_,
+    /* 0x7c - 0x7f*/ jl_short_, jge_short_, jle_short_, jg_short_,
     /* 0x80 - 0x83*/ group_1_b, group_1_v, nemu_trap, group_1_bv,
-    /* 0x84 - 0x87*/ inv, inv, inv, inv,
+    /* 0x84 - 0x87*/ inv, test_r2rm_v, inv, inv,
     /* 0x88 - 0x8b*/ mov_r2rm_b, mov_r2rm_v, mov_rm2r_b, mov_rm2r_v,
     /* 0x8c - 0x8f*/ inv, inv, inv, inv,
     /* 0x90 - 0x93*/ nop, inv, inv, inv,
@@ -49,7 +49,7 @@ instr_func opcode_entry[256] = {
     /* 0xb4 - 0xb7*/ mov_i2r_b, mov_i2r_b, mov_i2r_b, mov_i2r_b,
     /* 0xb8 - 0xbb*/ mov_i2r_v, mov_i2r_v, mov_i2r_v, mov_i2r_v,
     /* 0xbc - 0xbf*/ mov_i2r_v, mov_i2r_v, mov_i2r_v, mov_i2r_v,
-    /* 0xc0 - 0xc3*/ group_2_b, group_2_v, inv, inv,
+    /* 0xc0 - 0xc3*/ group_2_b, group_2_v, inv, ret_near,
     /* 0xc4 - 0xc7*/ inv, inv, mov_i2rm_b, mov_i2rm_v,
     /* 0xc8 - 0xcb*/ inv, inv, inv, inv,
     /* 0xcc - 0xcf*/ inv, inv, inv, inv,
@@ -59,7 +59,7 @@ instr_func opcode_entry[256] = {
     /* 0xdc - 0xdf*/ group_x87_dc, group_x87_dd, group_x87_de, group_x87_df,
     /* 0xe0 - 0xe3*/ inv, inv, inv, inv,
     /* 0xe4 - 0xe7*/ inv, inv, inv, inv,
-    /* 0xe8 - 0xeb*/ inv, inv, inv, inv,
+    /* 0xe8 - 0xeb*/ call_near, jmp_near, inv, inv,
     /* 0xec - 0xef*/ inv, inv, inv, inv,
     /* 0xf0 - 0xf3*/ inv, break_point, inv, rep_repe,
     /* 0xf4 - 0xf7*/ hlt, inv, group_3_b, group_3_v,
@@ -72,12 +72,13 @@ instr_func group_1_b_entry[8] =
     {inv, inv, inv, inv, inv, inv, inv, inv};
 
 /* 0x81 */
+//根据modrm字节的reg_opcode域判断执行哪个函数
 instr_func group_1_v_entry[8] =
-    {inv, inv, inv, inv, inv, inv, inv, inv};
+    {add_i2rm_v, inv, inv, inv, inv, inv, inv, inv};
 
 /* 0x83 */
 instr_func group_1_bv_entry[8] =
-    {inv, inv, inv, inv, inv, inv, inv, inv};
+    {inv, inv, inv, inv, inv, inv, inv, cmp_i2rm_bv};
 
 /* 0xc0 */
 instr_func group_2_b_entry[8] =

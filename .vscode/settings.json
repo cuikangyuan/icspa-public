@@ -2,7 +2,8 @@
     "files.associations": {
         "cpu.h": "c",
         "alu_ref.h": "c",
-        "nemu.h": "c"
+        "nemu.h": "c",
+        "push.h": "c"
     },
     "editor.fontSize": 14,
     "markdown.preview.fontSize": 19,
