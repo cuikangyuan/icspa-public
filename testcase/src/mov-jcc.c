@@ -14,14 +14,14 @@ int main()
 	b = A[3];
 	A[5] = b;
 
-	//nemu_assert(A[0] == 0); //pass
-	//nemu_assert(A[1] >= 1); //pass
+	nemu_assert(A[0] == 0); //pass
+	nemu_assert(A[1] >= 1); //pass
 
-	nemu_assert(A[2] <= 2);
-	//nemu_assert(A[3] > 2);
-	//nemu_assert(A[4] < 5);
-	//nemu_assert(b == 3);
-	//nemu_assert(A[5] != 6);
+	nemu_assert(A[2] <= 2);//pass
+	nemu_assert(A[3] > 2);
+	nemu_assert(A[4] < 5);
+	nemu_assert(b == 3);
+	nemu_assert(A[5] != 6);
 
 	HIT_GOOD_TRAP;
 
