@@ -257,7 +257,7 @@ uint32_t alu_sub(uint32_t src, uint32_t dest, size_t data_size)
 #else
 	uint32_t res = 0;
 	res = dest - src;
-
+	//printf("alu_sub !! dest=%#010x, src=%#010x, res=%#010x, data_size=%#010x\n", dest, src, res, data_size);
 	set_CF_sub(res, src, dest, data_size);
 	set_PF(res);
 	// set_AF(); //不模拟

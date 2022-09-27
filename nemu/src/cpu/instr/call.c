@@ -19,5 +19,11 @@ make_instr_func(call_near)
         //update eip base on next instr address with rel32
         cpu.eip = cpu.eip + 1 + data_size / 8 + offset;
 
+        //ref:       
+        // uint32_t rel = paddr_read(eip + 1, data_size / 8);
+        // cpu.esp -= 4;
+        // paddr_write(cpu.esp, 4, cpu.eip + 1 + data_size / 8);
+        // cpu.eip = (cpu.eip + 1 + data_size / 8 + rel);
+
         return 0;
 }
