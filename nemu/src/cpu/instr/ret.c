@@ -10,3 +10,13 @@ make_instr_func(ret_near)
 
     return 0;
 }
+
+make_instr_func(ret_near_imm16)
+{
+
+    uint16_t imm16 = paddr_read(cpu.eip, 2);
+    cpu.eip = paddr_read(cpu.esp, data_size / 8);
+    cpu.esp += (data_size / 8 + imm16);
+
+    return 0;
+}

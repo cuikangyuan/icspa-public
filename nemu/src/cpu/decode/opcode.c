@@ -7,7 +7,7 @@ instr_func opcode_entry[256] = {
     /* 0x0c - 0x0f*/ inv, inv, inv, opcode_2_byte,
     /* 0x10 - 0x13*/ inv, adc_r2rm_v, inv, inv,
     /* 0x14 - 0x17*/ inv, inv, inv, inv,
-    /* 0x18 - 0x1b*/ inv, inv, inv, inv,
+    /* 0x18 - 0x1b*/ inv, inv, inv, sbb_rm2r_v,
     /* 0x1c - 0x1f*/ inv, inv, inv, inv,
     /* 0x20 - 0x23*/ and_r2rm_b, and_r2rm_v, and_rm2r_b, and_rm2r_v,
     /* 0x24 - 0x27*/ inv, inv, inv, inv,
@@ -42,14 +42,14 @@ instr_func opcode_entry[256] = {
     /* 0x98 - 0x9b*/ cbw_a_v, cltd, inv, inv,
     /* 0x9c - 0x9f*/ inv, inv, sahf, inv,
     /* 0xa0 - 0xa3*/ mov_o2a_b, mov_o2a_v, mov_a2o_b, mov_a2o_v,
-    /* 0xa4 - 0xa7*/ movs_b, movs_v, inv, inv,
-    /* 0xa8 - 0xab*/ inv, inv, inv, inv,
+    /* 0xa4 - 0xa7*/ movs_b, movs_v, cmps_b, cmps_v,
+    /* 0xa8 - 0xab*/ test_i2a_b, test_i2a_v, stos_b, stos_v,
     /* 0xac - 0xaf*/ inv, inv, inv, inv,
     /* 0xb0 - 0xb3*/ mov_i2r_b, mov_i2r_b, mov_i2r_b, mov_i2r_b,
     /* 0xb4 - 0xb7*/ mov_i2r_b, mov_i2r_b, mov_i2r_b, mov_i2r_b,
     /* 0xb8 - 0xbb*/ mov_i2r_v, mov_i2r_v, mov_i2r_v, mov_i2r_v,
     /* 0xbc - 0xbf*/ mov_i2r_v, mov_i2r_v, mov_i2r_v, mov_i2r_v,
-    /* 0xc0 - 0xc3*/ group_2_b, group_2_v, inv, ret_near,
+    /* 0xc0 - 0xc3*/ group_2_b, group_2_v, ret_near_imm16, ret_near,
     /* 0xc4 - 0xc7*/ inv, inv, mov_i2rm_b, mov_i2rm_v,
     /* 0xc8 - 0xcb*/ inv, leave, inv, inv,
     /* 0xcc - 0xcf*/ inv, inv, inv, inv,
@@ -69,12 +69,12 @@ instr_func opcode_entry[256] = {
 
 /* 0x80 */
 instr_func group_1_b_entry[8] =
-    {inv, inv, inv, inv, inv, inv, inv, cmp_i2rm_b};
+    {inv, inv, inv, inv, and_i2rm_b, inv, inv, cmp_i2rm_b};
 
 /* 0x81 */
 //根据modrm字节的reg_opcode域判断执行哪个函数
 instr_func group_1_v_entry[8] =
-    {add_i2rm_v, inv, inv, inv, inv, inv, inv, cmp_i2rm_v};
+    {add_i2rm_v, inv, inv, inv, and_i2rm_v, sub_i2rm_v, inv, cmp_i2rm_v};
 
 /* 0x83 */
 //2022.09.26 23:42 踩坑-and_i2rm_bv 写成了and_i2rm_v
@@ -107,15 +107,15 @@ instr_func group_2_cv_entry[8] =
 
 /* 0xf6 */
 instr_func group_3_b_entry[8] =
-    {inv, inv, inv, inv, inv, inv, inv, inv};
+    {test_i2rm_b, inv, inv, inv, inv, inv, inv, inv};
 
 /* 0xf7 */
 instr_func group_3_v_entry[8] =
-    {inv, inv, not_rm_v, inv, inv, inv, inv, inv};
+    {test_i2rm_v, inv, not_rm_v, inv, mul_rm2a_v, imul_rm2a_v, inv, idiv_rm2a_v};
 
 /* 0xff */
 instr_func group_5_indirect_entry[8] =
-    {inc_rm_v, dec_rm_v, inv, inv, inv, inv, push_rm_v, inv};
+    {inc_rm_v, dec_rm_v, inv, inv, jmp_near_indirect, inv, push_rm_v, inv};
 
 instr_func group_7_entry[8] =
     {inv, inv, inv, inv, inv, inv, inv, inv};
@@ -185,7 +185,7 @@ instr_func opcode_2_byte_entry[256] = {
     /* 0x74 - 0x77*/ inv, inv, inv, inv,
     /* 0x78 - 0x7b*/ inv, inv, inv, inv,
     /* 0x7c - 0x7f*/ inv, inv, inv, inv,
-    /* 0x80 - 0x83*/ inv, inv, inv, inv,
+    /* 0x80 - 0x83*/ jo_near, jno_near, jb_near, jae_near,
     /* 0x84 - 0x87*/ je_near, jne_near, jna_near, ja_near,
     /* 0x88 - 0x8b*/ js_near, jns_near, jp_near, jnp_near,
     /* 0x8c - 0x8f*/ jl_near, jge_near, jle_near, jg_near,
@@ -196,7 +196,7 @@ instr_func opcode_2_byte_entry[256] = {
     /* 0xa0 - 0xa3*/ inv, inv, inv, bt_r2rm_v,
     /* 0xa4 - 0xa7*/ inv, inv, inv, inv,
     /* 0xa8 - 0xab*/ inv, inv, inv, inv,
-    /* 0xac - 0xaf*/ inv, inv, inv, inv,
+    /* 0xac - 0xaf*/ inv, inv, inv, imul_rm2r_v,
     /* 0xb0 - 0xb3*/ inv, inv, inv, inv,
     /* 0xb4 - 0xb7*/ inv, inv, mov_zrm82r_v, mov_zrm162r_l,
     /* 0xb8 - 0xbb*/ inv, inv, inv, inv,
