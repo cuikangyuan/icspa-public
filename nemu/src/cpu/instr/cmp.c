@@ -20,8 +20,9 @@ static void instr_execute_2op() {
     //     } 
     // }
 
-    
-    alu_sub(opr_src.val, opr_dest.val, data_size);
+    uint32_t result = alu_sub(opr_src.val, opr_dest.val, data_size);
+    //trace_instr("cmp: src %x dest: %x result: %x\n", opr_src.val, opr_dest.val, result);
+
 }
 
 make_instr_impl_2op(cmp, i, rm, v)
