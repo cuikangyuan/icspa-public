@@ -3,7 +3,8 @@
         "cpu.h": "c",
         "alu_ref.h": "c",
         "nemu.h": "c",
-        "push.h": "c"
+        "push.h": "c",
+        "instr.h": "c"
     },
     "editor.fontSize": 14,
     "markdown.preview.fontSize": 19,

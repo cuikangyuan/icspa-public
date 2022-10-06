@@ -27,3 +27,17 @@ make_instr_func(call_near)
 
         return 0;
 }
+
+make_instr_func(call_indirect)
+{
+        OPERAND rm;
+        rm.data_size = data_size;
+        int len = modrm_rm(eip + 1, &rm);
+        operand_read(&rm);
+
+        cpu.esp -= data_size / 8;
+        paddr_write(cpu.esp, data_size / 8, cpu.eip + 1 + len);
+        cpu.eip = rm.val;
+
+        return 0;
+}

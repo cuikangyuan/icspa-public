@@ -10,7 +10,7 @@ instr_func opcode_entry[256] = {
     /* 0x18 - 0x1b*/ inv, inv, inv, sbb_rm2r_v,
     /* 0x1c - 0x1f*/ inv, inv, inv, inv,
     /* 0x20 - 0x23*/ and_r2rm_b, and_r2rm_v, and_rm2r_b, and_rm2r_v,
-    /* 0x24 - 0x27*/ inv, inv, inv, inv,
+    /* 0x24 - 0x27*/ inv, and_i2a_v, inv, inv,
     /* 0x28 - 0x2b*/ sub_r2rm_b, sub_r2rm_v, sub_rm2r_b, sub_rm2r_v,
     /* 0x2c - 0x2f*/ inv, inv, inv, inv,
     /* 0x30 - 0x33*/ inv, xor_r2rm_v, inv, inv,
@@ -79,7 +79,7 @@ instr_func group_1_v_entry[8] =
 /* 0x83 */
 //2022.09.26 23:42 踩坑-and_i2rm_bv 写成了and_i2rm_v
 instr_func group_1_bv_entry[8] =
-    {add_i2rm_bv, inv, inv, inv, and_i2rm_bv, sub_i2rm_bv, inv, cmp_i2rm_bv};
+    {add_i2rm_bv, or_i2rm_bv, inv, inv, and_i2rm_bv, sub_i2rm_bv, inv, cmp_i2rm_bv};
 
 /* 0xc0 */
 instr_func group_2_b_entry[8] =
@@ -115,7 +115,7 @@ instr_func group_3_v_entry[8] =
 
 /* 0xff */
 instr_func group_5_indirect_entry[8] =
-    {inc_rm_v, dec_rm_v, inv, inv, jmp_near_indirect, inv, push_rm_v, inv};
+    {inc_rm_v, dec_rm_v, call_indirect, inv, jmp_near_indirect, inv, push_rm_v, inv};
 
 instr_func group_7_entry[8] =
     {inv, inv, inv, inv, inv, inv, inv, inv};

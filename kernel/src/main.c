@@ -86,7 +86,7 @@ void init_cond()
 	video_mapping_write_test();
 #endif
 	/* Load the program. */
-	uint32_t eip = loader();
+	uint32_t eip = loader();//装载测试用例
 #ifdef HAS_DEVICE_VGA
 	/* Read data in the video memory to check whether 
 	 * the test data is written sucessfully.
@@ -107,5 +107,5 @@ void init_cond()
 
 	//asm volatile(".byte 0x82" : : "a"(2));
 	/* Here we go! */
-	((void (*)(void))eip)();
+	((void (*)(void))eip)(); //包装成函数指针 执行测试用例
 }

@@ -26,7 +26,8 @@ extern bool flag_reg_alu_fpu;
 extern void (*builtin_test_func)();
 extern void (*builtin_score_func)();
 
-// load executable files
+// load executable files 装在程序
+//镜像文件是吧elf文件中节头表，头信息去掉之后的部分，只包含程序执行必要的指令和数据
 static void load_exec(const char *image_file, const uint32_t load_off)
 {
 	int ret;

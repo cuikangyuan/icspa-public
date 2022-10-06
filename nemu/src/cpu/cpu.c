@@ -18,6 +18,7 @@ bool has_prefix = false;
 #define sign(x) ((uint32_t)(x) >> 31)
 
 void do_devices();
+//初始化CPU
 void init_cpu(const uint32_t init_eip)
 {
 	cpu.eflags.val = 0x0;
