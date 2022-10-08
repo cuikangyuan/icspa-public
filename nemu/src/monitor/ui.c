@@ -2,6 +2,7 @@
 #include "monitor/ui.h"
 #include "monitor/breakpoint.h"
 #include "cpu/cpu.h"
+#include "memory/memory.h"
 
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -96,7 +97,7 @@ cmd_handler(cmd_p)
 	{
 		goto p_error;
 	}
-	//if(args + strspn(args, " ") >= cmd_end) { goto p_error; }
+	// if(args + strspn(args, " ") >= cmd_end) { goto p_error; }
 
 	bool success;
 	uint32_t val = expr(args, &success);
@@ -117,7 +118,7 @@ p_error:
 
 uint32_t look_up_fun_symtab(char *, bool *);
 
-//static void cmd_b(char *e, char *cmd_end) {
+// static void cmd_b(char *e, char *cmd_end) {
 cmd_handler(cmd_b)
 {
 	vaddr_t addr;
@@ -141,7 +142,7 @@ cmd_handler(cmd_b)
 	}
 	else if (sscanf(args, "%80[a-zA-Z0-9_]", fun_name) == 1)
 	{
-		//addr = look_up_fun_symtab(fun_name, &success) + 3;	// +3 to skip the machine code of "push %ebp; movl %esp, %ebp"
+		// addr = look_up_fun_symtab(fun_name, &success) + 3;	// +3 to skip the machine code of "push %ebp; movl %esp, %ebp"
 		addr = look_up_fun_symtab(fun_name, &success);
 		if (!success)
 		{
@@ -161,7 +162,7 @@ cmd_handler(cmd_b)
 	return 0;
 }
 
-//static void cmd_w(char *e, char *cmd_end) {
+// static void cmd_w(char *e, char *cmd_end) {
 cmd_handler(cmd_w)
 {
 	if (args == NULL)
@@ -182,7 +183,7 @@ cmd_handler(cmd_w)
 	return 0;
 }
 
-//static void cmd_d() {
+// static void cmd_d() {
 cmd_handler(cmd_d)
 {
 	char *p = strtok(NULL, " ");
@@ -218,6 +219,42 @@ cmd_handler(cmd_d)
 	return 0;
 }
 
+cmd_handler(cmd_x)
+{
+	if (args == NULL)
+	{
+		return 0;
+	}
+	char *token;
+	token = strtok(args, " ");
+	int32_t n = -1;
+	sscanf(args, "%d", &n);
+	if (n < 0)
+	{
+		printf("Invalid number\n");
+		return 0;
+	}
+
+	token = strtok(NULL, "");
+	if (token == NULL)
+	{
+		return 0;
+	}
+
+	u_int32_t val;
+	bool success;
+	val = expr(token, &success);
+	assert(success == true);
+	// sscanf(token, "0x%x", &val);
+	for (int32_t i = 0; i < n; i++)
+	{
+		printf("0x%08x   ", val + i * 4);
+		printf("0x%08x\n", vaddr_read(val + i * 4, 0, 4));
+	}
+
+	return 0;
+}
+
 cmd_handler(cmd_help);
 
 static struct
@@ -238,6 +275,7 @@ static struct
 	/* TODO: Add more commands */
 	{"si", "Single Step Execution", cmd_si},
 	{"info", "Print register and watch point info", cmd_info},
+	{"x", "扫描内存: 求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节, eg: x 10 $esp", cmd_x},
 
 };
 

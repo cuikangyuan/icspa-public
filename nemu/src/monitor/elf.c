@@ -8,6 +8,9 @@ static char *strtab = NULL;
 static Elf32_Sym *symtab = NULL;
 static int nr_symtab_entry;
 
+/*
+符号表的解析 ：给定一个符号(如全局变量)的名字，返回其在内存中的值
+*/
 void load_elf_tables(char *exec_file)
 {
 	FILE *fp = fopen(exec_file, "rb");

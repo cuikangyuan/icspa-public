@@ -4,7 +4,8 @@
         "alu_ref.h": "c",
         "nemu.h": "c",
         "push.h": "c",
-        "instr.h": "c"
+        "instr.h": "c",
+        "memory.h": "c"
     },
     "editor.fontSize": 14,
     "markdown.preview.fontSize": 19,
