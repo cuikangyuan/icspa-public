@@ -53,7 +53,7 @@ uint32_t loader()
 			*/
 			/*copy the segment from the ELF file to its proper memory area */			
 			//uint32_t start_addr = mm_malloc(ph->p_vaddr, ph->p_memsz);
-			//Log("p_vaddr: %x, start_addr: %x", ph->p_vaddr, start_addr);
+			//Log("load p_vaddr: %x", ph->p_vaddr);
 			//memcpy((void *)start_addr, (void *)ph->p_offset, ph->p_filesz);
 			memcpy((void *)ph->p_vaddr, (void *)ph->p_offset, ph->p_filesz);
 			/*zeror the memory area [vaddr + file_sz, vaddr + mem_sz) */

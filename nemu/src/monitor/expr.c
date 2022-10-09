@@ -9,6 +9,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+extern uint32_t look_up_symtab(char *sym, bool *success);
 
 enum
 {
@@ -47,10 +48,10 @@ static struct rule
 	{"\\)", ')'},				// parenthess_r
 	{"0[Xx][a-fA-F0-9]+", HEX}, // hex
 	{"[0-9]+", NUM},			// decimal
-	{"\\$[a-z][A-Z]+", REG},	// register
+	{"\\$[a-z]+", REG},	// register
 	{"&&", AND},				// and
-	{"!=", NOTEQUAL}			// not equal
-};
+	{"!=", NOTEQUAL},			// not equal
+	{"[a-zA-Z0-9_]+", SYMB}};
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
 #define TOKEN_MAX_SIZE 32
@@ -105,7 +106,7 @@ static bool make_token(char *e)
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
-				printf("match regex[%d] at position %d with len %d: %.*s", i, position, substr_len, substr_len, substr_start);
+				//printf("match regex[%d] at position %d with len %d: %.*s\n", i, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
 				if (substr_len > TOKEN_MAX_SIZE)
@@ -131,6 +132,7 @@ static bool make_token(char *e)
 				case NUM:
 				case HEX:
 				case REG:
+				case SYMB:
 					strncpy(tokens[nr_token].str, substr_start, substr_len);
 					tokens[nr_token].str[substr_len] = '\0';
 				default:
@@ -169,7 +171,7 @@ static uint32_t get_val(int p)
 
 static bool is_opt(int opt)
 {
-	if (opt == '+' || opt == '-' || opt == '*' || opt == '/' || opt == EQ || opt == NOTEQUAL || opt == AND || opt == NEG)
+	if (opt == '+' || opt == '-' || opt == '*' || opt == '/' || opt == EQ || opt == NOTEQUAL || opt == AND || opt == NEG || opt == DEREF)
 		return true;
 	else
 		return false;
@@ -185,12 +187,15 @@ static int opt_level(int opt, int *cur)
 		break;
 	case '+':
 	case '-':
-		level = 4;
+		level = 5;
 		break;
 	case '*':
 	case '/':
-		level = 3;
+		level = 4;
 		break;
+	case DEREF:
+		level = 3;
+		break;	
 	case EQ:
 	case NOTEQUAL:
 		level = 7;
@@ -217,39 +222,38 @@ static int opt_level(int opt, int *cur)
 	}
 }
 
-//4 + 3 * (2 - 1)
-static int get_main_opt(int p, int q) {
-  int parentheses = 0, cur = 0;
-  int pos = -1;
-  int i;
-  for (i = p; i <= q; i++)
-  {
-      int type = tokens[i].type;
-      if (type == '(')
-      {
-         parentheses++;
-         continue;
-      } else if (type == ')')
-      {
-          parentheses--;
-          continue;
-      }
+// 4 + 3 * (2 - 1)
+static int get_main_opt(int p, int q)
+{
+	int parentheses = 0, cur = 0;
+	int pos = -1;
+	int i;
+	for (i = p; i <= q; i++)
+	{
+		int type = tokens[i].type;
+		if (type == '(')
+		{
+			parentheses++;
+			continue;
+		}
+		else if (type == ')')
+		{
+			parentheses--;
+			continue;
+		}
 
-      if (is_opt(type) && parentheses == 0)
-      {
-        //if opt and not surrounded by parentheses
-        //find the highest level opt
-        if (opt_level(type, &cur) > 0)
-        {
-          pos = i;
-        }
-        
-      }
-           
-  }
+		if (is_opt(type) && parentheses == 0)
+		{
+			// if opt and not surrounded by parentheses
+			// find the highest level opt
+			if (opt_level(type, &cur) > 0)
+			{
+				pos = i;
+			}
+		}
+	}
 
-  return pos;
-  
+	return pos;
 }
 
 static bool check_parentheses(int p, int q)
@@ -291,6 +295,7 @@ static bool check_parentheses(int p, int q)
 
 static uint32_t eval(int p, int q)
 {
+	//printf("eval enter !! p = %d, q = %d\n", p, q);
 	if (p > q)
 	{
 		/* Bad expression */
@@ -313,6 +318,12 @@ static uint32_t eval(int p, int q)
 			val = get_reg_val(tokens[p].str + 1, &success);
 			assert(success == true);
 		}
+		if (tokens[p].type == SYMB)
+		{
+			bool success = false;
+			val = look_up_symtab(tokens[p].str, &success);
+			assert(success == true);
+		}
 
 		return val;
 	}
@@ -328,13 +339,15 @@ static uint32_t eval(int p, int q)
 		int32_t val1, val2;
 		int main_opt = get_main_opt(p, q);
 
+		//printf("main_opt ====> %d, \n", main_opt);
+
 		if (tokens[main_opt].type == NEG)
 		{
 			return -eval(main_opt + 1, q);
 		}
 		else if (tokens[main_opt].type == DEREF)
 		{
-			return vaddr_read(eval(main_opt + 1, q), 0, 4);
+			return vaddr_read(eval(main_opt + 1, q), 0x0, 4);
 		}
 
 		val1 = eval(p, main_opt - 1);
@@ -376,6 +389,7 @@ uint32_t expr(char *e, bool *success)
 	{
 		if (tokens[i].type == '*' && (i == 0 || is_opt(tokens[i - 1].type)))
 		{
+			//printf("expr enter !! set token[%d] = DEREF\n", i);
 			tokens[i].type = DEREF;
 		}
 		if (tokens[i].type == '-' && (i == 0 || is_opt(tokens[i - 1].type)))

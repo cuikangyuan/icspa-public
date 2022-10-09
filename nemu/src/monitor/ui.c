@@ -107,7 +107,7 @@ cmd_handler(cmd_p)
 	}
 	else
 	{
-		printf("%d\n", val);
+		printf("0x%08x\n", val);
 	}
 	return 0;
 
@@ -245,11 +245,11 @@ cmd_handler(cmd_x)
 	bool success;
 	val = expr(token, &success);
 	assert(success == true);
-	// sscanf(token, "0x%x", &val);
+	//sscanf(token, "0x%x", &val);
 	for (int32_t i = 0; i < n; i++)
 	{
 		printf("0x%08x   ", val + i * 4);
-		printf("0x%08x\n", vaddr_read(val + i * 4, 0, 4));
+		printf("0x%08x\n", vaddr_read(val + i * 4, 0x0, 4));
 	}
 
 	return 0;
