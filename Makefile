@@ -10,7 +10,7 @@ nemu:
 
 run: nemu
 	$(call git_commit, "run", $(TIME_MAKE))
-	./nemu/nemu --testcase add
+	./nemu/nemu --kernel --testcase add
 
 run-kernel: nemu
 	$(call git_commit, "run-kernel", $(TIME_MAKE))

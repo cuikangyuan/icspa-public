@@ -46,14 +46,13 @@ void init_cpu(const uint32_t init_eip)
 #endif
 }
 
-
 //执行循环的模拟
 void exec(uint32_t n)
 {
 	static BP *bp = NULL;
 	verbose = (n <= 100000);
-	//TODO
-	//verbose = true;
+	// TODO
+	// verbose = true;
 	int instr_len = 0;
 	bool hit_break_rerun = false;
 
@@ -65,11 +64,11 @@ void exec(uint32_t n)
 	nemu_state = NEMU_RUN;
 	while (n > 0 && nemu_state == NEMU_RUN)
 	{
-		if(!is_nemu_hlt)
+		if (!is_nemu_hlt)
 		{
 			//执行eip指向的指令 返回指令的长度
 			instr_len = exec_inst();
-			//eip指向下一条指令
+			// eip指向下一条指令
 			cpu.eip += instr_len;
 			n--;
 
@@ -108,7 +107,7 @@ void exec(uint32_t n)
 			}
 		}
 #if defined(HAS_DEVICE_TIMER) || defined(HAS_DEVICE_VGA) || defined(HAS_DEVICE_KEYBOARD) || defined(HAS_DEVICE_AUDIO)
-	do_devices();
+		do_devices();
 #endif
 #ifdef IA32_INTR
 		// check for interrupt
@@ -133,8 +132,8 @@ int exec_inst()
 	uint8_t opcode = 0;
 	// get the opcode 读一个字节
 	opcode = instr_fetch(cpu.eip, 1);
-//printf("opcode = %x, eip = %x\n", opcode, cpu.eip);
-// instruction decode and execution
+// printf("opcode = %x, eip = %x\n", opcode, cpu.eip);
+//  instruction decode and execution
 #ifdef NEMU_REF_INSTR
 	int len = __ref_opcode_entry[opcode](cpu.eip, opcode);
 #else
@@ -153,7 +152,7 @@ void do_intr()
 		// get interrupt number
 		uint8_t intr_no = i8259_query_intr_no(); // get interrupt number
 		assert(intr_no != I8259_NO_INTR);
-		i8259_ack_intr();	// tell the PIC interrupt info received
+		i8259_ack_intr();	 // tell the PIC interrupt info received
 		raise_intr(intr_no); // raise intrrupt to turn into kernel handler
 	}
 }
