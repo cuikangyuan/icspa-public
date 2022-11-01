@@ -62,23 +62,10 @@ L1CACHE cache;
 extern void hw_mem_write(paddr_t paddr, size_t len, uint32_t data);
 extern uint32_t hw_mem_read(paddr_t paddr, size_t len);
 
-uint32_t hw_mem_read_(paddr_t paddr, size_t len)
-{
-	uint32_t ret = 0;
-	memcpy(&ret, hw_mem + paddr, len);
-	return ret;
-}
+uint32_t cache_enable_counter = 0;
 
-void trace_line_data(CACHE_LINE *line)
-{
-#ifdef DEBUG
-	printf("\33[33;31m trace_line_data addr ====> %x\33[0m\n", ((uint32_t)line));
-	for (int i = 0; i < CACHE_DATA_SIZE_PER_LINE; i++)
-	{
-		printf("%x->%x ", i, line->data[i]);
-	}
-	printf("\n");
-#endif
+uint32_t get_cache_enable_counter() {
+	return cache_enable_counter;
 }
 
 // init the cache
@@ -134,7 +121,6 @@ void cache_write(paddr_t paddr, size_t len, uint32_t data)
 
 			CACHE_SET *set_item = cache.sets + set_index_to_use;
 
-			bool find_target_line = false;
 			for (int i = 0; i < CACHE_LINE_SIZE_PER_SET; i++)
 			{
 				CACHE_LINE *line = &set_item->lines[i];
@@ -150,14 +136,8 @@ void cache_write(paddr_t paddr, size_t len, uint32_t data)
 						memcpy(line->data, &data, len - (64 - offset_in_line));
 					}
 
-					find_target_line = true;
 					break;
 				}
-			}
-
-			if (find_target_line)
-			{
-				// continue;
 			}
 		}
 
@@ -180,7 +160,9 @@ uint32_t cache_read(paddr_t paddr, size_t len)
 		{
 			CACHE_LINE *line = &set_matched->lines[i];
 			if ((line->tag == tag_to_match) && line->valid)
-			{
+			{	
+				//cache hit
+				cache_enable_counter += 1;
 				uint32_t ret = 0;
 				memcpy(&ret, line->data + offset_in_line, len);
 				return ret;
@@ -207,6 +189,8 @@ uint32_t cache_read(paddr_t paddr, size_t len)
 		line_to_update->valid = true;
 		line_to_update->tag = tag_to_match;
 
+		//cache miss
+		cache_enable_counter += 10;
 		uint32_t ret = 0;
 		memcpy(&ret, line_to_update->data + offset_in_line, len);
 		return ret;
@@ -227,39 +211,95 @@ uint32_t cache_read(paddr_t paddr, size_t len)
 
 			CACHE_SET *set_item = cache.sets + set_index_to_use;
 
-			bool find_target_line = false;
+			// search for valid line in set
+			bool flag = false;
 			for (int i = 0; i < CACHE_LINE_SIZE_PER_SET; i++)
 			{
 				CACHE_LINE *line = &set_item->lines[i];
 
 				if ((line->tag == tag_to_match) && line->valid)
-				{	uint32_t tmp = 0;
+				{
+					uint32_t tmp = 0;
 					if (k == 0)
 					{
 						memcpy(&tmp, line->data + offset_in_line, 64 - offset_in_line);
+						cache_enable_counter += 1;
 						ret = tmp;
 					}
 					else
 					{
 						memcpy(&tmp, line->data, len - (64 - offset_in_line));
+						cache_enable_counter += 1;
 						ret = ret + (tmp << (8 * (64 - offset_in_line)));
-						//cache hit
-						return ret;
 					}
 
-					find_target_line = true;
+					flag = true;
 					break;
 				}
 			}
-
-			if (find_target_line)
+			if (flag)
 			{
-				// continue;
+				continue;
+			}
+
+			// search for invalid line to cache data read from memory
+			for (int i = 0; i < CACHE_LINE_SIZE_PER_SET; i++)
+			{
+				CACHE_LINE *line = &set_item->lines[i];
+
+				if (!line->valid)
+				{
+					//caution: data_offset is the start address of this block, so the data len can set to 64
+					uint32_t data_offset = ((tag_to_match << 7) + set_index_to_use) << 6;
+					memcpy(line->data, hw_mem + data_offset, CACHE_DATA_SIZE_PER_LINE);
+					line->valid = true;
+					line->tag = tag_to_match;
+
+					uint32_t tmp = 0;
+					if (k == 0)
+					{
+						memcpy(&tmp, line->data + offset_in_line, 64 - offset_in_line);
+						cache_enable_counter += 10;
+						ret = tmp;
+					}
+					else
+					{
+						memcpy(&tmp, line->data, len - (64 - offset_in_line));
+						cache_enable_counter += 10;
+						ret = ret + (tmp << (8 * (64 - offset_in_line)));
+					}
+
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				continue;
+			}
+
+			int line_index_to_fill = rand() % CACHE_LINE_SIZE_PER_SET;
+			CACHE_LINE *line = &set_item->lines[line_index_to_fill];
+			//caution: data_offset is the start address of this block, so the data len can set to 64
+			uint32_t data_offset = ((tag_to_match << 7) + set_index_to_use) << 6;
+			memcpy(line->data, hw_mem + data_offset, CACHE_DATA_SIZE_PER_LINE);
+			line->valid = true;
+			line->tag = tag_to_match;
+
+			uint32_t tmp = 0;
+			if (k == 0)
+			{
+				memcpy(&tmp, line->data + offset_in_line, 64 - offset_in_line);
+				cache_enable_counter += 10;
+				ret = tmp;
+			}
+			else
+			{
+				memcpy(&tmp, line->data, len - (64 - offset_in_line));
+				cache_enable_counter += 10;
+				ret = ret + (tmp << (8 * (64 - offset_in_line)));
 			}
 		}
-
-		//cache miss
-		ret = hw_mem_read(paddr, len);
 
 		return ret;
 	}

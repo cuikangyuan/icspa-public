@@ -1,0 +1,114 @@
+[CACHE:174] cache_read enter MISS set line data !! paddr:30000, len:1, set:0, line:0, offset:0, valid:1
+0->e9 1->25 2->12 3->0 4->0 5->6a 6->0 7->6a 8->0 9->eb a->7b b->6a c->0 d->6a e->1 f->eb 10->75 11->6a 12->0 13->6a 14->2 15->eb 16->6f 17->6a 18->0 19->6a 1a->3 1b->eb 1c->69 1d->6a 1e->0 1f->6a 20->4 21->eb 22->63 23->6a 24->0 25->6a 26->5 27->eb 28->5d 29->6a 2a->0 2b->6a 2c->6 2d->eb 2e->57 2f->6a 30->0 31->6a 32->7 33->eb 34->51 35->6a 36->8 37->eb 38->4d 39->6a 3a->0 3b->6a 3c->9 3d->eb 3e->47 3f->6a 
+00030000:   e9 25 12 00 00                            jmp $0x1225
+[CACHE:174] cache_read enter MISS set line data !! paddr:3122a, len:1, set:48, line:0, offset:2a, valid:1
+0->c3 1->55 2->89 3->e5 4->83 5->ec 6->4 7->e8 8->92 9->f0 a->ff b->ff c->5 d->f4 e->bd f->0 10->0 11->8b 12->45 13->8 14->88 15->45 16->fc 17->90 18->e8 19->ba 1a->ff 1b->ff 1c->ff 1d->85 1e->c0 1f->74 20->f7 21->b8 22->1 23->0 24->0 25->0 26->82 27->90 28->c9 29->c3 2a->55 2b->89 2c->e5 2d->e8 2e->6c 2f->f0 30->ff 31->ff 32->5 33->ce 34->bd 35->0 36->0 37->8d 38->80 39->48 3a->42 3b->ff 3c->ff 3d->ff 3e->e0 3f->b8 
+0003122a:   55                                        pushl %ebp
+[CACHE:99] cache_write enter !! paddr = 7ffffec, len = 4, data = 0
+0003122b:   89 e5                                     movl %esp, %ebp
+[CACHE:99] cache_write enter !! paddr = 7ffffe8, len = 4, data = 31232
+[CACHE:174] cache_read enter MISS set line data !! paddr:3029e, len:1, set:a, line:0, offset:1e, valid:1
+0->8b 1->45 2->8 3->25 4->ff 5->1 6->0 7->0 8->89 9->c1 a->8b b->45 c->f0 d->8a e->55 f->e4 10->88 11->54 12->8 13->6 14->8b 15->45 16->f0 17->c6 18->40 19->5 1a->1 1b->90 1c->c9 1d->c3 1e->8b 1f->4 20->24 21->c3 22->8b 23->14 24->24 25->c3 26->8b 27->1c 28->24 29->c3 2a->55 2b->89 2c->e5 2d->83 2e->ec 2f->14 30->e8 31->e9 32->ff 33->ff 34->ff 35->5 36->4b 37->cd 38->0 39->0 3a->8b 3b->45 3c->8 3d->66 3e->89 3f->45 
+0003029e:   8b 04 24                                  movl (%esp), %eax
+[CACHE:174] cache_read enter MISS set line data !! paddr:7ffffe8, len:4, set:7f, line:0, offset:28, valid:1
+0->0 1->0 2->0 3->0 4->0 5->0 6->0 7->0 8->0 9->0 a->0 b->0 c->0 d->0 e->0 f->0 10->0 11->0 12->0 13->0 14->0 15->0 16->0 17->0 18->0 19->0 1a->0 1b->0 1c->0 1d->0 1e->0 1f->0 20->0 21->0 22->0 23->0 24->0 25->0 26->0 27->0 28->32 29->12 2a->3 2b->0 2c->0 2d->0 2e->0 2f->0 30->0 31->0 32->0 33->0 34->0 35->0 36->0 37->0 38->0 39->0 3a->0 3b->0 3c->0 3d->0 3e->0 3f->0 
+(nemu) si
+(nemu) si
+00031232:   05 ce bd 00 00                            addl $0xbdce, %eax
+(nemu) si
+(nemu) si
+(nemu) si
+[CACHE:174] cache_read enter MISS set line data !! paddr:31248, len:1, set:49, line:0, offset:8, valid:1
+0->1 1->0 2->0 3->0 4->82 5->90 6->5d 7->c3 8->55 9->89 a->e5 b->53 c->83 d->ec e->14 f->e8 10->52 11->f0 12->ff 13->ff 14->81 15->c3 16->ac 17->bd 18->0 19->0 1a->8d 1b->83 1c->d4 1d->c5 1e->ff 1f->ff 20->50 21->6a 22->52 23->8d 24->83 25->94 26->c5 27->ff 28->ff 29->50 2a->8d 2b->83 2c->a0 2d->c5 2e->ff 2f->ff 30->50 31->e8 32->d8 33->fe 34->ff 35->ff 36->83 37->c4 38->10 39->e8 3a->14 3b->f5 3c->ff 3d->ff 3e->89 3f->45 
+00031248:   55                                        pushl %ebp
+[CACHE:99] cache_write enter !! paddr = 7ffffe8, len = 4, data = 7ffffec
+(nemu) si
+00031249:   89 e5                                     movl %esp, %ebp
+(nemu) si
+0003124b:   53                                        pushl %ebx
+[CACHE:99] cache_write enter !! paddr = 7ffffe4, len = 4, data = 0
+(nemu) si
+0003124c:   83 ec 14                                  subl $0x14, %esp
+(nemu) si
+[CACHE:99] cache_write enter !! paddr = 7ffffcc, len = 4, data = 31254
+(nemu) si
+000302a6:   8b 1c 24                                  movl (%esp), %ebx
+[CACHE:174] cache_read enter MISS set line data !! paddr:7ffffcc, len:4, set:7f, line:1, offset:c, valid:1
+0->0 1->0 2->0 3->0 4->0 5->0 6->0 7->0 8->0 9->0 a->0 b->0 c->54 d->12 e->3 f->0 10->0 11->0 12->0 13->0 14->0 15->0 16->0 17->0 18->0 19->0 1a->0 1b->0 1c->0 1d->0 1e->0 1f->0 20->0 21->0 22->0 23->0 24->0 25->0 26->0 27->0 28->ec 29->ff 2a->ff 2b->7 2c->0 2d->0 2e->0 2f->0 30->0 31->0 32->0 33->0 34->0 35->0 36->0 37->0 38->0 39->0 3a->0 3b->0 3c->0 3d->0 3e->0 3f->0 
+(nemu) si
+(nemu) si
+00031254:   81 c3 ac bd 00 00                         addl $0xbdac, %ebx
+(nemu) si
+(nemu) si
+00031260:   50                                        pushl %eax
+[CACHE:99] cache_write enter !! paddr = 7ffffcc, len = 4, data = 395d4
+(nemu) si
+00031261:   6a 52                                     pushb $0x52
+[CACHE:99] cache_write enter !! paddr = 7ffffc8, len = 4, data = 52
+(nemu) si
+(nemu) si
+00031269:   50                                        pushl %eax
+[CACHE:99] cache_write enter !! paddr = 7ffffc4, len = 4, data = 39594
+(nemu) si
+(nemu) si
+00031270:   50                                        pushl %eax
+[CACHE:99] cache_write enter !! paddr = 7ffffc0, len = 4, data = 395a0
+(nemu) si
+[CACHE:99] cache_write enter !! paddr = 7ffffbc, len = 4, data = 31276
+(nemu) si
+[CACHE:174] cache_read enter MISS set line data !! paddr:3114e, len:1, set:45, line:0, offset:e, valid:1
+0->0 1->0 2->0 3->82 4->b8 5->0 6->0 7->0 8->0 9->8b a->5d b->fc c->c9 d->c3 e->55 f->89 10->e5 11->53 12->83 13->ec 14->14 15->e8 16->4c 17->f1 18->ff 19->ff 1a->81 1b->c3 1c->a6 1d->be 1e->0 1f->0 20->8d 21->45 22->c 23->89 24->45 25->f4 26->8b 27->45 28->8 29->ff 2a->75 2b->f4 2c->50 2d->68 2e->0 2f->1 30->0 31->0 32->8d 33->83 34->a0 35->1d 36->1 37->0 38->50 39->e8 3a->62 3b->c 3c->0 3d->0 3e->83 3f->c4 
+0003114e:   55                                        pushl %ebp
+[CACHE:99] cache_write enter !! paddr = 7ffffb8, len = 4, data = 7ffffe8
+(nemu) si
+0003114f:   89 e5                                     movl %esp, %ebp
+(nemu) si
+00031151:   53                                        pushl %ebx
+[CACHE:99] cache_write enter !! paddr = 7ffffb4, len = 4, data = 3d000
+(nemu) si
+00031152:   83 ec 14                                  subl $0x14, %esp
+(nemu) si
+[CACHE:99] cache_write enter !! paddr = 7ffff9c, len = 4, data = 3115a
+(nemu) si 3
+000302a6:   8b 1c 24                                  movl (%esp), %ebx
+[CACHE:174] cache_read enter MISS set line data !! paddr:7ffff9c, len:4, set:7e, line:0, offset:1c, valid:1
+0->0 1->0 2->0 3->0 4->0 5->0 6->0 7->0 8->0 9->0 
+a->0 b->0 c->0 d->0 e->0 f->0 10->0 11->0 12->0 
+13->0 14->0 15->0 16->0 17->0 18->0 19->0 1a->0 
+1b->0 1c->5a 1d->11 1e->3 1f->0 20->0 21->0 22->0 
+23->0 24->0 25->0 26->0 27->0 28->0 29->0 2a->0 
+2b->0 2c->0 2d->0 2e->0 2f->0 30->0 31->0 
+32->0 33->0 34->0 35->d0 36->3 37->0 38->e8 
+39->ff 3a->ff 3b->7 3c->76 3d->12 3e->3 3f->0 
+
+0003115a:   81 c3 a6 be 00 00                         addl $0xbea6, %ebx
+(nemu) si 3
+00031163:   89 45 f4                                  movl %eax, -0xc(%ebp)
+[CACHE:99] cache_write enter !! paddr = 7ffffac, len = 4, data = 7ffffc4
+00031166:   8b 45 08                                  movl 0x8(%ebp), %eax
+[CACHE:174] cache_read enter MISS set line data !! paddr:7ffffc0, len:4, set:7f, line:2, offset:0, valid:1
+0->a0 1->95 2->3 3->0 4->94 5->95 6->3 7->0 8->52 9->0 
+a->0 b->0 c->d4 d->95 e->3 f->0 10->0 11->0 12->0 13->0 
+14->0 15->0 16->0 17->0 18->0 19->0 1a->0 1b->0 1c->0 
+1d->0 1e->0 1f->0 20->0 21->0 22->0 23->0 24->0 25->0 
+26->0 27->0 28->ec 29->ff 2a->ff 2b->7 2c->0 2d->0 
+2e->0 2f->0 30->0 31->0 32->0 33->0 34->0 35->0 36->0 
+37->0 38->0 39->0 3a->0 3b->0 3c->0 3d->0 3e->0 3f->0 
+(nemu) si 3
+00031169:   ff 75 f4                                  pushl -0xc(%ebp)
+[CACHE:144] cache_read enter HIT !! paddr:7ffffac, len:4, set:7e, line:0, offset:2c
+[CACHE:146] cache_read enter HIT !!! read got:0,expect:7ffffc4
+0->0 1->0 2->0 3->0 4->0 5->0 6->0 7->0 8->0 9->0 
+a->0 b->0 c->0 d->0 e->0 f->0 10->0 11->0 12->0 
+13->0 14->0 15->0 16->0 17->0 18->0 19->0 1a->0 
+1b->0 1c->5a 1d->11 1e->3 1f->0 20->0 21->0 
+22->0 23->0 24->0 25->0 26->0 27->0 28->0 29->0 
+2a->0 2b->0 2c->0 2d->0 2e->0 2f->0 30->0 31->0 
+32->0 33->0 34->0 35->d0 36->3 37->0 38->e8 39->ff 
+3a->ff 3b->7 3c->76 3d->12 3e->3 3f->0 
+
+[CACHE:99] cache_write enter !! paddr = 7ffff9c, len = 4, data = 0
+0003116c:   50                                        pushl %eax
+[CACHE:99] cache_write enter !! paddr = 7ffff98, len = 4, data = 395a0
+0003116d:   68 00 01 00 00                            pushl $0x100
+[CACHE:99] cache_write enter !! paddr = 7ffff94, len = 4, data = 100

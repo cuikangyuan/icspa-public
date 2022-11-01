@@ -3,6 +3,7 @@
 #include "cpu/intr.h"
 #include "cpu/instr.h"
 #include "memory/memory.h"
+#include "memory/mmu/cache.h"
 #include "monitor/breakpoint.h"
 #include <stdio.h>
 #include <assert.h>
@@ -117,6 +118,12 @@ void exec(uint32_t n)
 	if (nemu_state == NEMU_STOP)
 	{
 		printf("NEMU2 terminated\n");
+		#ifdef CACHE_ENABLED
+		printf("cache enable counter: %d\n", get_cache_enable_counter());
+		#else
+		printf("cache disable counter: %d\n", get_cache_disable_counter());
+		#endif
+
 #ifdef IA32_INTR
 		i8259_destroy();
 #endif

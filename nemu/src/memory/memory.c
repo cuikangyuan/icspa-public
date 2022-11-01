@@ -7,6 +7,12 @@
 
 uint8_t hw_mem[MEM_SIZE_B];
 
+uint32_t cache_disable_counter = 0;
+
+uint32_t get_cache_disable_counter() {
+	return cache_disable_counter;
+}
+
 uint32_t hw_mem_read(paddr_t paddr, size_t len)
 {
 	uint32_t ret = 0;
@@ -26,6 +32,7 @@ uint32_t paddr_read(paddr_t paddr, size_t len)
 	ret = cache_read(paddr, len);  // 通过cache进行读
 #else
 	ret = hw_mem_read(paddr, len);
+	cache_disable_counter += 10;
 #endif
 	return ret;
 }

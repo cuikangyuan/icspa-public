@@ -7,7 +7,9 @@
         "instr.h": "c",
         "memory.h": "c",
         "stdio.h": "c",
-        "cstdio": "c"
+        "cstdio": "c",
+        "segment.h": "c",
+        "cache.h": "c"
     },
     "editor.fontSize": 14,
     "markdown.preview.fontSize": 19,

@@ -1,0 +1,217 @@
+./nemu/nemu --autorun --testcase mov --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/mov
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001002b6
+NEMU2 terminated
+cache disable counter: 99510
+./nemu/nemu --autorun --testcase mov-cmp --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/mov-cmp
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010037e
+NEMU2 terminated
+cache disable counter: 101790
+./nemu/nemu --autorun --testcase mov-c --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/mov-c
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100103
+NEMU2 terminated
+cache disable counter: 100200
+./nemu/nemu --autorun --testcase mov-jcc --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/mov-jcc
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100102
+NEMU2 terminated
+cache disable counter: 100170
+./nemu/nemu --autorun --testcase add --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/add
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100094
+NEMU2 terminated
+cache disable counter: 135790
+./nemu/nemu --autorun --testcase add-longlong --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/add-longlong
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100113
+NEMU2 terminated
+cache disable counter: 226690
+./nemu/nemu --autorun --testcase if-else --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/if-else
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000c4
+NEMU2 terminated
+cache disable counter: 112770
+./nemu/nemu --autorun --testcase fib --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/fib
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010006f
+NEMU2 terminated
+cache disable counter: 123710
+./nemu/nemu --autorun --testcase bubble-sort --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/bubble-sort
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000fd
+NEMU2 terminated
+cache disable counter: 5200650
+./nemu/nemu --autorun --testcase quick-sort --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/quick-sort
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001001e0
+NEMU2 terminated
+cache disable counter: 2886500
+./nemu/nemu --autorun --testcase select-sort --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/select-sort
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000fd
+NEMU2 terminated
+cache disable counter: 3795470
+./nemu/nemu --autorun --testcase max --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/max
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000b0
+NEMU2 terminated
+cache disable counter: 167420
+./nemu/nemu --autorun --testcase min3 --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/min3
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000dd
+NEMU2 terminated
+cache disable counter: 769870
+./nemu/nemu --autorun --testcase pascal --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/pascal
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010015d
+NEMU2 terminated
+cache disable counter: 597520
+./nemu/nemu --autorun --testcase bit  --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/bit
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100212
+NEMU2 terminated
+cache disable counter: 114990
+./nemu/nemu --autorun --testcase movsx --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/movsx
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010019a
+NEMU2 terminated
+cache disable counter: 101570
+./nemu/nemu --autorun --testcase sub-longlong --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/sub-longlong
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010010a
+NEMU2 terminated
+cache disable counter: 219610
+./nemu/nemu --autorun --testcase fact --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/fact
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000ae
+NEMU2 terminated
+cache disable counter: 150190
+./nemu/nemu --autorun --testcase gotbaha --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/gotbaha
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x001000e3
+NEMU2 terminated
+cache disable counter: 1149390
+./nemu/nemu --autorun --testcase leap-year --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/leap-year
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010009c
+NEMU2 terminated
+cache disable counter: 209180
+./nemu/nemu --autorun --testcase matrix-mul-small --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/matrix-mul-small
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100125
+NEMU2 terminated
+cache disable counter: 1434640
+./nemu/nemu --autorun --testcase matrix-mul --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/matrix-mul
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100172
+NEMU2 terminated
+cache disable counter: 1563926960
+./nemu/nemu --autorun --testcase mul-longlong  --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/mul-longlong
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010013a
+NEMU2 terminated
+cache disable counter: 122410
+./nemu/nemu --autorun --testcase prime --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/prime
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100093
+NEMU2 terminated
+cache disable counter: 1124080
+./nemu/nemu --autorun --testcase shuixianhua --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/shuixianhua
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100114
+NEMU2 terminated
+cache disable counter: 2411600
+./nemu/nemu --autorun --testcase sum --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/sum
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100048
+NEMU2 terminated
+cache disable counter: 118000
+./nemu/nemu --autorun --testcase wanshu --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/wanshu
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100091
+NEMU2 terminated
+cache disable counter: 39012730
+./nemu/nemu --autorun --testcase struct --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/struct
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010010c
+NEMU2 terminated
+cache disable counter: 208610
+./nemu/nemu --autorun --testcase string --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/string
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x0010016a
+NEMU2 terminated
+cache disable counter: 141960
+./nemu/nemu --autorun --testcase hello-str  --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/hello-str
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT GOOD TRAP at eip = 0x00100105
+NEMU2 terminated
+cache disable counter: 261400
+./nemu/nemu --autorun --testcase test-float --kernel
+NEMU load and execute img: ./kernel/kernel.img  elf: ./testcase/bin/test-float
+nemu trap output: [src/main.c,82,init_cond] {kernel} Hello, NEMU world!
+nemu trap output: [src/elf/elf.c,37,loader] {kernel} ELF loading from ram disk.
+nemu: HIT BAD TRAP at eip = 0x001000c8
+NEMU2 terminated
+cache disable counter: 99140
