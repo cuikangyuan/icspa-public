@@ -20,6 +20,10 @@ void print_reg()
 	printf("esi\t0x%08x\n", cpu.esi);
 	printf("edi\t0x%08x\n", cpu.edi);
 	printf("eip\t0x%08x\n", cpu.eip);
+	#ifdef IA32_SEG
+	printf("cr0\t0x%08x\n", cpu.cr0.val);
+	#endif
+	
 
 	printf("CF\t0x%08x\n", cpu.eflags.CF);
 	printf("PF\t0x%08x\n", cpu.eflags.PF);

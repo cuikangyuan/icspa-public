@@ -9,7 +9,9 @@
         "stdio.h": "c",
         "cstdio": "c",
         "segment.h": "c",
-        "cache.h": "c"
+        "cache.h": "c",
+        "reg.h": "c",
+        "reg_fpu.h": "c"
     },
     "editor.fontSize": 14,
     "markdown.preview.fontSize": 19,
