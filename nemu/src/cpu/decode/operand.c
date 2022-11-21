@@ -117,11 +117,13 @@ void operand_write(OPERAND *opr)
 #ifdef IA32_SEG
 		case 0:
 			cpu.cr0.val = opr->val;
+			//printf("set cr0 val : 0x%x\n", opr->val);
 			break;
 #endif
 #ifdef IA32_PAGE
 		case 3:
 			cpu.cr3.val = opr->val;
+			//printf("set cr3 val : 0x%x\n", opr->val);
 			break;
 #endif
 		default:

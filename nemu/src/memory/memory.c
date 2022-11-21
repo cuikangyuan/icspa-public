@@ -9,7 +9,8 @@ uint8_t hw_mem[MEM_SIZE_B];
 
 uint32_t cache_disable_counter = 0;
 
-uint32_t get_cache_disable_counter() {
+uint32_t get_cache_disable_counter()
+{
 	return cache_disable_counter;
 }
 
@@ -29,7 +30,7 @@ uint32_t paddr_read(paddr_t paddr, size_t len)
 {
 	uint32_t ret = 0;
 #ifdef CACHE_ENABLED
-	ret = cache_read(paddr, len);  // 通过cache进行读
+	ret = cache_read(paddr, len); // 通过cache进行读
 #else
 	ret = hw_mem_read(paddr, len);
 	cache_disable_counter += 10;
@@ -48,12 +49,37 @@ void paddr_write(paddr_t paddr, size_t len, uint32_t data)
 
 uint32_t laddr_read(laddr_t laddr, size_t len)
 {
+#ifndef IA32_PAGE
 	return paddr_read(laddr, len);
+#else
+	if (cpu.cr0.pg == 1 && cpu.cr0.pe == 1)
+	{
+		paddr_t paddr = page_translate(laddr);
+		return paddr_read(paddr, len);
+	}
+	else
+	{
+		return paddr_read(laddr, len);
+	}
+
+#endif
 }
 
 void laddr_write(laddr_t laddr, size_t len, uint32_t data)
 {
+#ifndef IA32_PAGE
 	paddr_write(laddr, len, data);
+#else
+	if (cpu.cr0.pg == 1 && cpu.cr0.pe == 1)
+	{
+		paddr_t paddr = page_translate(laddr);
+		paddr_write(paddr, len, data);
+	}
+	else
+	{
+		paddr_write(laddr, len, data);
+	}
+#endif
 }
 
 uint32_t vaddr_read(vaddr_t vaddr, uint8_t sreg, size_t len)
@@ -67,7 +93,7 @@ uint32_t vaddr_read(vaddr_t vaddr, uint8_t sreg, size_t len)
 	{
 		laddr = segment_translate(vaddr, sreg);
 	}
-	
+
 	return laddr_read(laddr, len);
 #endif
 }
@@ -75,7 +101,7 @@ uint32_t vaddr_read(vaddr_t vaddr, uint8_t sreg, size_t len)
 void vaddr_write(vaddr_t vaddr, uint8_t sreg, size_t len, uint32_t data)
 {
 	assert(len == 1 || len == 2 || len == 4);
-#ifndef IA32_SEG	
+#ifndef IA32_SEG
 	laddr_write(vaddr, len, data);
 #else
 	uint32_t laddr = vaddr;
@@ -83,7 +109,7 @@ void vaddr_write(vaddr_t vaddr, uint8_t sreg, size_t len, uint32_t data)
 	{
 		laddr = segment_translate(vaddr, sreg);
 	}
-	
+
 	laddr_write(laddr, len, data);
 #endif
 }

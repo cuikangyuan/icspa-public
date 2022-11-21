@@ -133,7 +133,6 @@ make_instr_func(mov_r2cr_v) {
         cr.val = r.val;
         operand_write(&cr);
 	print_asm_2("mov_r2cr_v", "", len, &r, &cr);
-
         return len;
 }
 

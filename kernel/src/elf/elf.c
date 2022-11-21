@@ -51,17 +51,30 @@ uint32_t loader()
 			装载到内存VirtAddr开始，连续MemSize个字节的区域中(bss节存储未初始化的全局变量-MemSize会比FileSize大[文件中不需要存储，但在内存中需要分配空间]
 			)
 			*/
-			/*copy the segment from the ELF file to its proper memory area */			
-			//uint32_t start_addr = mm_malloc(ph->p_vaddr, ph->p_memsz);
-			//Log("load p_vaddr: %x", ph->p_vaddr);
-			//memcpy((void *)start_addr, (void *)ph->p_offset, ph->p_filesz);
-			memcpy((void *)ph->p_vaddr, (void *)ph->p_offset, ph->p_filesz);
-			/*zeror the memory area [vaddr + file_sz, vaddr + mem_sz) */
+			/*copy the segment from the ELF file to its proper memory area */
+
+			//开启分页机制之后:
+			uint32_t start_addr;
+#ifdef IA32_PAGE
+			start_addr = mm_malloc(ph->p_vaddr, ph->p_memsz);
+#else
+			start_addr = ph->p_vaddr;
+#endif
+			//printf("elf loader start_addr 0x%x\n", start_addr);
+
+			memcpy((void *)start_addr, (void *)ph->p_offset, ph->p_filesz);
 			if (ph->p_memsz > ph->p_filesz)
 			{
-				memset((void *)(ph->p_vaddr + ph->p_filesz), 0x0, ph->p_memsz - ph->p_filesz);
+				memset((void *)(start_addr + ph->p_filesz), 0x0, ph->p_memsz - ph->p_filesz);
 			}
 
+			//未开启分页机制以前：
+			// memcpy((void *)ph->p_vaddr, (void *)ph->p_offset, ph->p_filesz);
+			// /*zeror the memory area [vaddr + file_sz, vaddr + mem_sz) */
+			// if (ph->p_memsz > ph->p_filesz)
+			// {
+			// 	memset((void *)(ph->p_vaddr + ph->p_filesz), 0x0, ph->p_memsz - ph->p_filesz);
+			// }
 
 #ifdef IA32_PAGE
 			/* Record the program break for future use */
