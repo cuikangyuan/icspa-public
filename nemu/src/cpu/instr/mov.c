@@ -85,7 +85,9 @@ make_instr_func(mov_srm162r_l) {
  */
 
 make_instr_func(mov_rm2s_w) {
-        int len = 1;
+        int len = 0;
+#ifdef IA32_SEG       
+        len = 1;
         OPERAND m;
         m.data_size = data_size;
         uint8_t op;
@@ -97,7 +99,7 @@ make_instr_func(mov_rm2s_w) {
         load_sreg(op); 
 
 	print_asm_1("mov_rm2s_w", "", len, &m);
-
+#endif
         return len;
 }
 

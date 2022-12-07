@@ -15,7 +15,7 @@ void printk(const char *, ...);
 #define panic(format, ...)                                    \
 	do                                                        \
 	{                                                         \
-		Log("\33[1;31msystem panic: " format, ##__VA_ARGS__); \
+															  \
 		HIT_BAD_TRAP;                                         \
 	} while (0)
 
@@ -24,7 +24,7 @@ void printk(const char *, ...);
 	{                                             \
 		if (!(cond))                              \
 		{                                         \
-			panic("Assertion failed: %s", #cond); \
+												  \
 		}                                         \
 	} while (0)
 

@@ -1803,7 +1803,7 @@ c0031312:	e8 dc ef ff ff       	call   c00302f3 <__x86.get_pc_thunk.bx>
 c0031317:	81 c3 e9 bc 00 00    	add    $0xbce9,%ebx
 c003131d:	e8 00 01 00 00       	call   c0031422 <init_page>
 c0031322:	81 c4 00 00 00 c0    	add    $0xc0000000,%esp
-c0031328:	8d 83 3d 43 ff bf    	lea    -0x4000bcc3(%ebx),%eax
+c0031328:	8d 83 3d 43 ff ff    	lea    -0xbcc3(%ebx),%eax
 c003132e:	ff e0                	jmp    *%eax
 c0031330:	b8 01 00 00 00       	mov    $0x1,%eax
 c0031335:	82                   	nemu_trap 

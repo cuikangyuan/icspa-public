@@ -72,6 +72,7 @@ void init_cond()
 
 #ifdef IA32_PAGE
 	/* Initialize the memory manager. */
+	//Log("Initialize the memory manager!");
 	init_mm();
 #endif
 
@@ -79,13 +80,14 @@ void init_cond()
 	 * Note that the output is actually performed only when
 	 * the serial port is available in NEMU.
 	 */
-	Log("Hello, NEMU world!");
+	//Log("Hello, NEMU world!");
 
 #ifdef HAS_DEVICE_VGA
 	/* Write some test data to the video memory. */
 	video_mapping_write_test();
 #endif
 	/* Load the program. */
+	//Log("Load the program!");
 	uint32_t eip = loader();//装载测试用例
 #ifdef HAS_DEVICE_VGA
 	/* Read data in the video memory to check whether 

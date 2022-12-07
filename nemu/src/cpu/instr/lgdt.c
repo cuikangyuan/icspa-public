@@ -5,7 +5,9 @@ Put the implementations of `lgdt' instructions here.
 make_instr_func(instr_lgdt)
 {
     //printf("lgdt enter eip=%x\n", eip);
-    int len = 1;
+    int len = 0;
+#ifdef IA32_SEG    
+    len = 1;
     OPERAND m;
     m.data_size = 16;
     len += modrm_rm(eip + 1, &m);
@@ -20,7 +22,7 @@ make_instr_func(instr_lgdt)
     cpu.gdtr.base = m.val;
     //printf("base=%x,limit=%x,eip=%x,len=%x\n", cpu.gdtr.base, cpu.gdtr.limit, (eip + 1), len);
 	print_asm_1("lgdt", "", len, &m);
-
+#endif
 
     return len;
 }

@@ -52,9 +52,10 @@ make_instr_func(jmp_long)
         rel.data_size = 16;
         operand_read(&rel);
 
+#ifdef IA32_SEG
         cpu.segReg[1].val = rel.val;
         load_sreg(1);                
-
+#endif
         return 0;
 }
 
