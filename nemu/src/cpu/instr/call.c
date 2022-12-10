@@ -4,8 +4,12 @@ Put the implementations of `call' instructions here.
 */
 make_instr_func(call_near)
 {
-        OPERAND rel;
+        // push next instr address
+        // update eip base on next instr address with rel32
+
+        OPERAND rel, esp, ip;
         rel.type = OPR_IMM;
+        rel.sreg = SREG_CS;
         rel.data_size = data_size;
         rel.addr = eip + 1;
 
@@ -13,30 +17,59 @@ make_instr_func(call_near)
 
         int offset = sign_ext(rel.val, data_size);
 
-        //push next instr address
-        cpu.esp -= data_size / 8;
-        paddr_write(cpu.esp, data_size / 8, cpu.eip + 1 + data_size / 8);
-        //update eip base on next instr address with rel32
-        cpu.eip = cpu.eip + 1 + data_size / 8 + offset;
+        esp.data_size = 32;
+        esp.type = OPR_REG;
+        esp.addr = 0x4;
 
-        //ref:       
-        // uint32_t rel = paddr_read(eip + 1, data_size / 8);
-        // cpu.esp -= 4;
-        // paddr_write(cpu.esp, 4, cpu.eip + 1 + data_size / 8);
-        // cpu.eip = (cpu.eip + 1 + data_size / 8 + rel);
+        operand_read(&esp);
+
+        ip.data_size = 32;
+        ip.type = OPR_MEM;
+        ip.val = cpu.eip + 1 + data_size / 8;
+
+        esp.val -= 4;
+
+        ip.addr = esp.val;
+
+        operand_write(&esp);
+        operand_write(&ip);
+
+        cpu.eip = cpu.eip + 1 + data_size / 8 + offset;
 
         return 0;
 }
 
 make_instr_func(call_indirect)
 {
-        OPERAND rm;
+        OPERAND rm, esp, ip;
+
         rm.data_size = data_size;
         int len = modrm_rm(eip + 1, &rm);
+
         operand_read(&rm);
 
-        cpu.esp -= data_size / 8;
-        paddr_write(cpu.esp, data_size / 8, cpu.eip + 1 + len);
+        esp.data_size = 32;
+        esp.type = OPR_REG;
+        esp.addr = 0x4;
+
+        operand_read(&esp);
+
+        ip.data_size = 32;
+        ip.type = OPR_MEM;
+        ip.val = cpu.eip + 1 + len;
+
+        esp.val -= 4;
+
+        ip.addr = esp.val;
+
+        operand_write(&esp);
+        operand_write(&ip);
+
+        //TODO        
+        // if (data_size == 16)
+        // {
+        //         rm.val = sign_ext(rm.val, data_size);
+        // }
         cpu.eip = rm.val;
 
         return 0;
