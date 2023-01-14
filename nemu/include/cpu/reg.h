@@ -9,6 +9,12 @@ typedef struct
 	uint32_t base : 32;
 } GDTR;
 
+typedef struct
+{
+	uint32_t limit : 16;
+	uint32_t base : 32;
+} IDTR;
+
 typedef union
 {
 	struct
@@ -25,7 +31,8 @@ typedef union
 	uint32_t val;
 } CR0;
 
-typedef union {
+typedef union
+{
 	struct
 	{
 		uint32_t pad0 : 3;
